@@ -1,6 +1,6 @@
 provider "aws" {
-    access_key = "${var.aws_access_key}"
-    secret_key = "${var.aws_secret_key}"
+    access_key = ""
+    secret_key = ""
     region = "us-east-2"
 }
 
@@ -55,7 +55,7 @@ resource "template_file" "install" {
 
     vars {
         download_url  = "${var.download-url}"
-        
+        extra-install = "${var.extra-install}"
     }
 }
 
@@ -69,7 +69,7 @@ resource "aws_autoscaling_group" "vault" {
     desired_capacity = 1
     health_check_grace_period = 15
     health_check_type = "EC2"
-    vpc_zone_identifier = "${aws_subnet.tf_vault_subnet.id}"
+    vpc_zone_identifier = ["${aws_subnet.tf_vault_subnet.id}"]
     load_balancers = ["${aws_elb.vault.id}"]
 
     tag {
@@ -131,9 +131,8 @@ resource "aws_elb" "vault" {
     connection_draining = true
     connection_draining_timeout = 400
     internal = true
-    subnets = "${aws_subnet.tf_vault_subnet.id}"
+    subnets =["${aws_subnet.tf_vault_subnet.id}"]
     security_groups = ["${aws_security_group.elb.id}"]
-
     listener {
         instance_port = 8200
         instance_protocol = "tcp"

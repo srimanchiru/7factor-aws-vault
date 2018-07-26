@@ -28,8 +28,14 @@ variable "instance_type" {
 }
 
 variable "key-name" {
-    default = "test"
+    default = "pubkey"
     description = "SSH key name for Vault instances"
+}
+
+
+variable "extra-install" {
+    default = ""
+    description = "Extra commands to run in the install script"
 }
 
 variable "aws_access_key" { default = "" }
